@@ -7,6 +7,7 @@ namespace nu {
 		bool Initialize(const char* name, int width, int height);
 		void Shutdown();
 		void SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
+		void SetColorf(float r, float g, float b, float a = 255);
 		void Clear();
 		void Present();
 		void DrawPoint(float x, float y);

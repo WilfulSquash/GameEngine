@@ -1,18 +1,28 @@
 #include "../Engine/Engine.h"
-#include "SDL3/SDL.h"
 #include <iostream>
+#include <vector>
 
+using namespace nu;
 
 int main()
 {
-    srand((unsigned int)time(nullptr));
 
-    nu::Renderer renderer;
+    srand((unsigned int)time(nullptr));
+    //INITIALIZATION
+    Renderer renderer;
 	renderer.Initialize("Game Engine", 1920, 1024);
 
+	//std::cout << sizeof(Vector2) << std::endl;
+    Vector2 vel{ 0.5f, 0.0f };
+    std::vector<Vector2> v;
+
+    for (unsigned int i = 0; i < 300; i++) {
+		v.push_back(Vector2{ RandomFloat(1280, RandomFloat(1024)) });
+    }
+
+    //UPDATE
     SDL_Event e;
     bool quit = false;
-
 
     while (!quit) {
         while (SDL_PollEvent(&e)) {
@@ -20,14 +30,15 @@ int main()
                 quit = true;
             }
         }
-
-        renderer.SetColor(0, 0, 0);
+        //RENDER
+        renderer.SetColor(0.0f, 0.0f, 0.0f);
         renderer.Clear();
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < v.size(); i++)
         {
-            renderer.SetColor(rand() % 256, rand() % 256, rand() % 256);
-            renderer.DrawPoint(rand() % 1920, rand() % 1024);
+            renderer.SetColor(RandomFloat(), RandomFloat(), RandomFloat());
+            v[i] = v[i] + vel;
+            renderer.DrawPoint(v[i].x, v[i].y);
         }
 
         for (int i = 0; i < 10; i++) 
@@ -62,7 +73,7 @@ int main()
        
 		renderer.Present();
     }
-
+    //SHUTDOWN
 	renderer.Shutdown();
 
     return 0;
