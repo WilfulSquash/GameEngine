@@ -6,13 +6,14 @@ namespace nu {
 	public:
 		bool Initialize(const char* name, int width, int height);
 		void Shutdown();
-		void SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
-		void SetColorf(float r, float g, float b, float a = 255);
+		void SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255)const;
+		void SetColorf(float r, float g, float b, float a = 1.0f)const;
+		void DrawLine(float x1, float y1, float x2, float y2)const;
 		void Clear();
 		void Present();
-		void DrawPoint(float x, float y);
-		void DrawRect(float x, float y, float w, float h);
-		void DrawFillRect(float x, float y, float w, float h);
+		void DrawPoint(float x, float y)const;
+		void DrawRect(float x, float y, float w, float h)const;
+		void DrawFillRect(float x, float y, float w, float h)const;
 	private:
 		SDL_Window* m_window = nullptr;
 		SDL_Renderer* m_renderer = nullptr;
