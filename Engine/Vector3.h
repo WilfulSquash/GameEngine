@@ -34,5 +34,6 @@ namespace nu {
 		float LengthSqr() const { return (x * x) + (y * y) + (z * z); }
 		float Length() const { return sqrt(LengthSqr()); }
 		Vector3 Normalized() const { return (*this) / Length(); }
+		float Dot(const Vector3& v) const { return (this->x * v.x) + (this->y * v.y) + (this->z * v.z); }
 	};
 }
