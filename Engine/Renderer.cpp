@@ -6,7 +6,10 @@
 #include "Input.h"
 
 namespace nu {
+
 	bool Renderer::Initialize(const char* name, int width, int height) {
+		m_width = width;
+		m_height = height;
 
         SDL_Init(SDL_INIT_VIDEO);
 

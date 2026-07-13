@@ -8,3 +8,5 @@
 #include <vector>
 #include "GameTime.h"
 #include "MathUtils.h"
+#include "Transform.h"
+#include "Actor.h"
