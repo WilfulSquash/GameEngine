@@ -6,13 +6,13 @@
 #include <iostream>
 
 namespace nu {
-	Engine engine;
 	bool Engine::Initialize() {
 		m_renderer.Initialize("Game Engine", 1920, 1024);
 		m_input.Initialize();
 
 		return true;
 	}
+
 	void Engine::Shutdown() {
 		m_input.Shutdown();
 		m_renderer.Shutdown();

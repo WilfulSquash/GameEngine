@@ -12,11 +12,15 @@
 #include "GameTime.h"
 #include "MathUtils.h"
 #include "Scene.h"
+#include "File.h"
+#include "Model.h"
+#include "Mesh.h"
 
 namespace nu {
 	class Engine {
 	public:
-		Engine() = default;
+		static Engine& Get() { static Engine engine; return engine; }
+
 		bool Initialize();
 		void Shutdown();
 
@@ -30,7 +34,8 @@ namespace nu {
 		Input m_input;
 		Renderer m_renderer;
 
+		Engine() = default;
+
 		Time m_time;
 	};
-	extern Engine engine;
 }

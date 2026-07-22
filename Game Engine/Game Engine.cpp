@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include <fmod.hpp>
+#include "Assets.h"
 
 #include <iostream>
 #include <vector>
@@ -10,6 +11,59 @@ using namespace nu;
 using namespace std;
 
 int main(){
+
+    ////WORKING DIRECTORY TEST
+    //// get current working directory
+    //std::cout << "Directory Operations:\n";
+    //std::cout << "Working directory: " << nu::GetWorkingDirectory() << "\n";
+
+    //// set working directory (current working directory + "Assets")
+    //std::cout << "Setting directory to 'Assets'...\n";
+    //nu::SetWorkingDirectory("Assets");
+    //std::cout << "New directory: " << nu::GetWorkingDirectory() << "\n\n";
+
+    //// get filenames in the working directory
+    //std::cout << "Files in Directory:\n";
+    //auto filenames = nu::GetFilesInDirectory(nu::GetWorkingDirectory());
+    //for (const auto& filename : filenames)
+    //{
+    //    std::cout << filename << "\n";
+    //}
+    //std::cout << "\n";
+
+    //// get filename info
+    //if (!filenames.empty())
+    //{
+    //    // get filename
+    //    std::string str = nu::GetFilename(filenames[0]);
+    //    std::cout << "Filename: " << str << "\n";
+
+    //    // get extension
+    //    str = nu::GetFileExtension(filenames[0]);
+    //    std::cout << "Extension: " << str << "\n";
+
+    //    // get filename no extension
+    //    str = nu::GetFilenameNoExtension(filenames[0]);
+    //    std::cout << "Filename No Extension: " << str << "\n\n";
+    //}
+
+    //// read and display text file
+    //std::cout << "Text File Reading:\n";
+    //std::string str;
+    //if (nu::ReadTextFile("test.txt", str))
+    //{
+    //    std::cout << str << "\n";
+    //}
+
+    //// write to text file
+    //std::cout << "Text File Writing:\n";
+    //nu::WriteTextFile("test.txt", "Hello, World!", true);
+    //if (nu::ReadTextFile("test.txt", str))
+    //{
+    //    std::cout << str << "\n";
+    //}
+
+
     // create audio system
     FMOD::System* audio;
     FMOD::System_Create(&audio);
@@ -37,19 +91,13 @@ int main(){
 
     srand((unsigned int)time(nullptr));
     //INITIALIZATION
-    engine.Initialize();
+    Engine::Get().Initialize();
    
-    //Mesh / Model
-    Mesh mesh{ {Vector2{0, 0}, Vector2{1, 1}, Vector2{0, 2}, Vector2{3, 1}, Vector2{0, 0}}, Color{1.0f, 1.0f, 1.0f} };
-    Mesh mesh2{ {Vector2{1, 1}, Vector2{-1, -1}, Vector2{-1, 3},Vector2{1, 1}}, Color{0.1333333333f, 0.2941176471f, 1.0f} };
-    Model model = vector<Mesh>{ {mesh, mesh2}};
-    Model model2 = vector<Mesh>{mesh};
-
     Scene scene;
 
     PlayerDesc playerDesc;
     playerDesc.name = "Player";
-    playerDesc.model = model;
+    playerDesc.model = assets::playerModel;
     playerDesc.transform = Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f };
     playerDesc.velocity = { 0.0f, 0.0f };
     playerDesc.speed = 2000.0f;
@@ -59,13 +107,13 @@ int main(){
 
     EnemyDesc enemyDesc;
     enemyDesc.name = "Enemy";
-    enemyDesc.model = model2;
-    enemyDesc.transform = Transform{ Vector2{RandomFloat((float)engine.GetRenderer().GetWidth()), RandomFloat((float)engine.GetRenderer().GetHeight())}, 0.0f, 15.0f};
+    enemyDesc.model = assets::enemyModel;
+    enemyDesc.transform = Transform{ Vector2{RandomFloat((float)Engine::Get().GetRenderer().GetWidth()), RandomFloat((float)Engine::Get().GetRenderer().GetHeight())}, 0.0f, 15.0f};
     enemyDesc.velocity = { 0.0f, 0.0f };
     enemyDesc.speed = 2000.0f;
 
     for (size_t i = 0; i < 20; i++){
-        enemyDesc.transform = Transform{ Vector2{RandomFloat((float)engine.GetRenderer().GetWidth()), RandomFloat((float)engine.GetRenderer().GetHeight())}, 0.0f, 15.0f };
+        enemyDesc.transform = Transform{ Vector2{RandomFloat((float)Engine::Get().GetRenderer().GetWidth()), RandomFloat((float)Engine::Get().GetRenderer().GetHeight())}, 0.0f, 15.0f};
         scene.AddActor(new Enemy{ enemyDesc });
     }
    
@@ -90,53 +138,53 @@ int main(){
         }
 
         //Engine
-        engine.Update();
+    Engine::Get().Update();
         
-		scene.Update(engine.GetTime().GetDeltaTime());
+		scene.Update(Engine::Get().GetTime().GetDeltaTime());
 
-        if (engine.GetInput().GetMouseDown(Input::MouseButton::LEFT)) {
+        if (Engine::Get().GetInput().GetMouseDown(Input::MouseButton::LEFT)) {
             if (points.empty()) {
-                points.push_back(engine.GetInput().GetMousePosition());
+                points.push_back(Engine::Get().GetInput().GetMousePosition());
             }
             else {
-                Vector2 v = points.back() - engine.GetInput().GetMousePosition();
+                Vector2 v = points.back() - Engine::Get().GetInput().GetMousePosition();
                 if (v.Length() > 30.0f) {
-                    points.push_back(engine.GetInput().GetMousePosition());
+                    points.push_back(Engine::Get().GetInput().GetMousePosition());
                 }
             }
         }
 
         //undo
-        if (engine.GetInput().GetButtonPressed(Input::MouseButton::RIGHT)) {
+        if (Engine::Get().GetInput().GetButtonPressed(Input::MouseButton::RIGHT)) {
             if (!points.empty()) { points.pop_back(); }
         }
 
         //SOUNDS
-        if (engine.GetInput().GetKeyPressed(SDL_SCANCODE_1))
+        if (Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_1))
         {
             audio->playSound(sounds[0], nullptr, false, nullptr);
         }
 
-        if (engine.GetInput().GetKeyPressed(SDL_SCANCODE_2))
+        if (Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_2))
         {
             audio->playSound(sounds[1], nullptr, false, nullptr);
         }
 
         //RENDER
-        engine.GetRenderer().SetColorf(0.0f, 0.0f, 0.0f);
-        engine.GetRenderer().Clear();
+        Engine::Get().GetRenderer().SetColorf(0.0f, 0.0f, 0.0f);
+        Engine::Get().GetRenderer().Clear();
 
         for (int i = 0; i < (int)points.size() - 1; i++)
         {
-            engine.GetRenderer().SetColorf(1.0f, 1.0f, 1.0f);
-            engine.GetRenderer().DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+            Engine::Get().GetRenderer().SetColorf(1.0f, 1.0f, 1.0f);
+            Engine::Get().GetRenderer().DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
         }
 
         //character
 		
-        scene.Draw(engine.GetRenderer());
+        scene.Draw(Engine::Get().GetRenderer());
 
-        engine.GetRenderer().Present();
+        Engine::Get().GetRenderer().Present();
     
     }
     //SHUTDOWN
