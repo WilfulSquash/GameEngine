@@ -22,7 +22,7 @@ namespace nu {
 		return min + RandomInt((max - min) + 1);
 	}
 
-	float RandomFloat() {
+	inline float RandomFloat() {
 		return rand() / (float)RAND_MAX;
 	}
 

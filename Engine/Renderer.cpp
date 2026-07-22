@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "Renderer.h"
+#include "Transform.h"
+#include "Model.h"
+#include "Mesh.h"
+#include "MathUtils.h"
 
 #include <SDL3/SDL.h>
 #include <iostream>
@@ -39,7 +43,6 @@ namespace nu {
         SDL_DestroyWindow(m_window);
         SDL_Quit();
     }
-
     void Renderer::SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)const{
         SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
     }
@@ -63,6 +66,33 @@ namespace nu {
     void Renderer::DrawFillRect(float x, float y, float w, float h)const {
         SDL_FRect rect = { x, y, w, h };
         SDL_RenderFillRect(m_renderer, &rect);
+    }
+    void Renderer::DrawModel(const Model& model, const Transform& transform)const{
+        //SetColor(model.GetColor().r, model.GetColor().g, model.GetColor().b, 1.0f);
+        //SetColorf(1.0f, 1.0f, 1.0f, 1.0f);
+
+        for (auto mesh : model.GetMeshes())
+        {
+            SetColorf(mesh.GetColor().r, mesh.GetColor().g, mesh.GetColor().b);
+            auto& points = mesh.GetPoints();
+
+            for (int i = 0; i + 1 < points.size(); i++) {
+                Vector2 v1 = points[i]; //local
+                Vector2 v2 = points[i + 1]; //local
+
+                //convert to world space
+                v1 *= transform.scale;
+                v2 *= transform.scale;
+
+                v1 = v1.Rotate(transform.rotation * DegToRad);
+                v2 = v2.Rotate(transform.rotation * DegToRad);
+
+                v1 += transform.position;
+                v2 += transform.position;
+
+                DrawLine(v1.x, v1.y, v2.x, v2.y);
+            }
+        }
     }
     void Renderer::DrawRect(float x, float y, float w, float h)const {
         SDL_FRect rect = { x, y, w, h };
