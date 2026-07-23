@@ -83,10 +83,10 @@ int main(){
     std::vector<FMOD::Sound*> sounds;
 
     FMOD::Sound* sound = nullptr;
-    audio->createSound("whistle.mp3", FMOD_DEFAULT, 0, &sound);
+    audio->createSound("assets/whistle.mp3", FMOD_DEFAULT, 0, &sound);
     sounds.push_back(sound);
 
-    audio->createSound("mario.mp3", FMOD_DEFAULT, 0, &sound);
+    audio->createSound("assets/mario.mp3", FMOD_DEFAULT, 0, &sound);
     sounds.push_back(sound);
 
     srand((unsigned int)time(nullptr));
@@ -100,6 +100,7 @@ int main(){
     playerDesc.model = assets::playerModel;
     playerDesc.transform = Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f };
     playerDesc.velocity = { 0.0f, 0.0f };
+    playerDesc.damping = { 3.0f };
     playerDesc.speed = 2000.0f;
 
     Player* player = new Player{playerDesc};
@@ -110,7 +111,8 @@ int main(){
     enemyDesc.model = assets::enemyModel;
     enemyDesc.transform = Transform{ Vector2{RandomFloat((float)Engine::Get().GetRenderer().GetWidth()), RandomFloat((float)Engine::Get().GetRenderer().GetHeight())}, 0.0f, 15.0f};
     enemyDesc.velocity = { 0.0f, 0.0f };
-    enemyDesc.speed = 2000.0f;
+    enemyDesc.damping = { 3.0f };
+    enemyDesc.speed = RandomFloat(1000.0f, 2000.0f);
 
     for (size_t i = 0; i < 20; i++){
         enemyDesc.transform = Transform{ Vector2{RandomFloat((float)Engine::Get().GetRenderer().GetWidth()), RandomFloat((float)Engine::Get().GetRenderer().GetHeight())}, 0.0f, 15.0f};

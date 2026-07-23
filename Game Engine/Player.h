@@ -17,4 +17,6 @@ public:
 private:
 	int m_ammo = 0;
 	float m_speed = 800.0f;
+
+
 };

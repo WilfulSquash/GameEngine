@@ -20,6 +20,7 @@ namespace nu{
 
 	private:
 		vector<Actor*> m_actors;
+		vector<Actor*> m_pendingActors;
 	};
 
 	template<typename T>
